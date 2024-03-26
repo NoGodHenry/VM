@@ -9,8 +9,11 @@ global read_instruction
 
 section .text
 read_header:
-  enter 16, 0
+  enter 32, 0
   mov dword[rbp-4], edi ; FileDescriptor
+  mov rsi, [rbp-5]
+  mov edx, 10 
   call read
+  
   leave
   ret

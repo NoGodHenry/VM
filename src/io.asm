@@ -20,8 +20,8 @@ write:
 
 read:
   mov eax, 3 
-  mov ebx, edi
-  mov rcx, rsi
-  mov edx, edx
+  mov ebx, edi ; FileDescriptor
+  mov rcx, rsi ; char* buffer
+  mov edx, edx ; size_t
   int 0x80
   ret

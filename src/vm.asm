@@ -1,19 +1,34 @@
 extern open
 extern read_header
 extern print
+extern read
 global main
 
 section .data
 file: DB "test.vm", 0
 
 ; Specifications
-; Length given by 
+; Length given by header
+; Every instruction is 64 bit
 
 section .text
 main_loop:
   enter 32, 0
   mov dword[rbp-4], edi
+  mov dword[rbp-8], esi
 
+instruction_loop:
+  ; Read instruction
+  mov edi, dword[rbp-4]
+  lea rsi, [rbp-4-1-4-8]
+  mov edx, 8
+  call read
+
+  sub dword[rbp-8], 8
+  cmp dword[rbp-8], 0
+  jle instruction_exit
+  jmp instruction_loop
+instruction_exit:
   leave
   ret
 
@@ -35,7 +50,10 @@ main:
   mov esi, 10 ; size_t
   call print
 
-  mov edi, eax
+  mov eax, dword[rbp-4-10] 
+  leave
+  ret
+  mov esi, eax
   call main_loop
   leave
   ret

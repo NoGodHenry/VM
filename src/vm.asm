@@ -2,11 +2,14 @@ extern open
 extern read_header
 extern print
 extern read
+extern movq_ins
 global main
+global instruction_end
 
 section .data
 file: DB "test.vm", 0
-
+reg0: dq 0
+reg1: dq 65
 ; Specifications
 ; Length given by header
 ; Every instruction is 64 bit
@@ -24,6 +27,11 @@ instruction_loop:
   mov edx, 8
   call read
 
+  mov rdi, reg0
+  mov rsi, reg1 
+  jmp movq_ins
+
+instruction_end:
   sub dword[rbp-8], 8
   cmp dword[rbp-8], 0
   jle instruction_exit

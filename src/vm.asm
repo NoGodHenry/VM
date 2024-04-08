@@ -8,7 +8,7 @@ global instruction_end
 
 section .data
 file: DB "test.vm", 0
-registers: times 80 db 0 ; 10 64-bit registers 
+registers: db "abcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyzzzzzzzzzzabcdefghijklmnopqrstruvxyz" ; 10 64-bit registers 
 
 ; Specifications
 ; Length given by header
@@ -64,9 +64,9 @@ main:
   mov esi, dword[rbp-4-10]
   call main_loop
   
-  ;mov rdi, reg0
-  ;mov esi, 4 ; size_t
-  ;call print
+  mov rdi, registers
+  mov esi, 200 ; size_t
+  call print
 
   leave
   ret

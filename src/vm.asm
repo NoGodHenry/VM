@@ -8,7 +8,8 @@ global instruction_end
 
 section .data
 file: DB "test.vm", 0
-registers: .space 80 ; 10 64-bit registers 
+registers: times 80 db 0 ; 10 64-bit registers 
+
 ; Specifications
 ; Length given by header
 ; Every instruction is 64 bit
@@ -26,8 +27,10 @@ instruction_loop:
   mov edx, 8
   call read
 
-  mov rdi, reg1
-  mov rsi, reg0 
+  mov rdi, registers
+  mov rsi, registers
+  add dil, byte[rbp-4-1-4-7]
+  add sil, byte[rbp-4-1-4-6]
   jmp movq_ins
 
 instruction_end:
@@ -61,9 +64,9 @@ main:
   mov esi, dword[rbp-4-10]
   call main_loop
   
-  mov rdi, reg0
-  mov esi, 4 ; size_t
-  call print
+  ;mov rdi, reg0
+  ;mov esi, 4 ; size_t
+  ;call print
 
   leave
   ret

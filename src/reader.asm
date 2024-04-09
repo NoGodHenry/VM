@@ -18,7 +18,7 @@ read_header:
   ; Reads the file
   mov edi, dword[rbp-4]
   mov rsi, qword[rbp-12]
-  mov rdx, 10
+  mov rdx, 8
   call read
   leave
   ret

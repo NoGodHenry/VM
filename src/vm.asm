@@ -3,16 +3,19 @@ extern read_header
 extern print
 extern read
 extern movq_ins
+extern movb_ins
 global main
 global instruction_end
 
 section .data
 file: DB "test.vm", 0
-registers: db "abcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyabcdefghijklmnopqrstruvxyzzzzzzzzzzabcdefghijklmnopqrstruvxyz" ; 10 64-bit registers 
+registers: db "1110000000000000000000000000000000000000" ; 10 64-bit registers 
 
-; Specifications
-; Length given by header
-; Every instruction is 64 bit
+%ifdef COMMENT
+Offset
+0x1 - instruction id 
+... - handled by given instruction
+%endif
 
 section .text
 main_loop:
@@ -23,18 +26,17 @@ main_loop:
 instruction_loop:
   ; Read instruction
   mov edi, dword[rbp-4]
-  lea rsi, [rbp-4-1-4-8]
-  mov edx, 8
+  lea rsi, [rbp-4-8-1]
+  mov edx, 1
   call read
 
-  mov rdi, registers
-  mov rsi, registers
-  add dil, byte[rbp-4-1-4-7]
-  add sil, byte[rbp-4-1-4-6]
-  jmp movq_ins
+  ;mov rdi, registers
+  ;mov rsi, registers
+  ;add dil, byte[rbp-4-1-4-7]
+  ;add sil, byte[rbp-4-1-4-6]
+  ;jmp movb_ins
 
 instruction_end:
-  sub dword[rbp-8], 8
   cmp dword[rbp-8], 0
   jle instruction_exit
   jmp instruction_loop
@@ -52,16 +54,16 @@ main:
 
   ; Read header from file
   mov edi, dword[rbp-4]
-  lea rsi, [rbp-4-10] ; -4 offset -10 size 
+  lea rsi, [rbp-4-8] ; -4 offset -8 size 
   call read_header
 
   ; DEBUG
-  lea rdi, [rbp-4-10]
+  lea rdi, [rbp-4-8]
   mov esi, 10 ; size_t
   call print
 
   mov edi, dword[rbp-4]
-  mov esi, dword[rbp-4-10]
+  mov esi, dword[rbp-4-8]
   call main_loop
   
   mov rdi, registers
